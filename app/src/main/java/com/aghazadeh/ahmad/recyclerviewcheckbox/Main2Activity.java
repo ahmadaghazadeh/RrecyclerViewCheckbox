@@ -22,6 +22,7 @@ public class Main2Activity extends AppCompatActivity {
 
     String reg = "#\\d+:\\d+#";
     Pattern pattern = Pattern.compile(reg);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
@@ -34,7 +35,7 @@ public class Main2Activity extends AppCompatActivity {
             String str = "It is #1:1# book. It is an #1:5#.";
             String split[] = str.split(reg);
             Matcher matcher = pattern.matcher(str);
-            List<View> lstView=new LinkedList<>();
+            List<View> lstView = new LinkedList<>();
 
             for (String st : split) {
                 TextView textView = new TextView(this);
@@ -42,8 +43,8 @@ public class Main2Activity extends AppCompatActivity {
                 textView.setText(st);
                 lstView.add(textView);
 
-                if(matcher.find()){
-                    String te=str.substring( matcher.start(),matcher.end());
+                if (matcher.find()) {
+                    String te = str.substring(matcher.start(), matcher.end());
                     String num[] = te.replace("#", "").split(":");
                     String space = "|";
                     for (int i = 0; i < Integer.parseInt(num[1]); i++) {
@@ -59,7 +60,7 @@ public class Main2Activity extends AppCompatActivity {
                 }
             }
             Collections.reverse(lstView);
-            for (View v:lstView) {
+            for (View v : lstView) {
                 parent.addView(v);
 
             }
@@ -74,7 +75,7 @@ public class Main2Activity extends AppCompatActivity {
             a.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             a.setOnTouchListener(new ChoiceTouchListener());
             a.setTextSize(50);
-            a.setPadding(5,5,5,5);
+            a.setPadding(5, 5, 5, 5);
             a.setBackgroundColor(getResources().getColor(R.color.colorAccent));
 
             TextView apple = new TextView(this);
@@ -83,15 +84,14 @@ public class Main2Activity extends AppCompatActivity {
             apple.setTextSize(50);
             apple.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             apple.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-            apple.setPadding(5,5,5,5);
+            apple.setPadding(5, 5, 5, 5);
             choose.addView(a);
             choose.addView(apple);
 
 
             parent.addView(choose);
             setContentView(parent);
-        }catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.getMessage();
         }
 
@@ -141,35 +141,45 @@ public class Main2Activity extends AppCompatActivity {
                     //handle the dragged view being dropped over a drop view
                     View view = (View) event.getLocalState();
                     //view dragged item is being dropped on
-                    TextView dropTarget = (TextView) v;
+                    final TextView dropTarget = (TextView) v;
+                    dropTarget.setTag(1,dropTarget.getText());
                     //view being dragged and dropped
-                    TextView dropped = (TextView) view;
+                    final TextView dropped = (TextView) view;
                     //checking whether first character of dropTarget equals first character of dropped
                     //if(dropTarget.getText().toString().charAt(0) == dropped.getText().toString().charAt(0))
                     //{
-                        //stop displaying the view where it was before it was dragged
-                        view.setVisibility(View.INVISIBLE);
-                        //update the text in the target view to reflect the data being dropped
-                        dropTarget.setText(dropped.getText().toString());
-                        //make it bold to highlight the fact that an item has been dropped
-                        dropTarget.setTypeface(Typeface.DEFAULT_BOLD);
-                        //if an item has already been dropped here, there will be a tag
-                        Object tag = dropTarget.getTag();
-                        //if there is already an item here, set it back visible in its original place
-                        if(tag!=null)
-                        {
-                            //the tag is the view id already dropped here
-                            int existingID = (Integer)tag;
-                            //set the original view visible again
-                            findViewById(existingID).setVisibility(View.VISIBLE);
+                    //stop displaying the view where it was before it was dragged
+                    dropped.setEnabled(false);
+                    //update the text in the target view to reflect the data being dropped
+                    dropTarget.setText(dropped.getText().toString());
+                    dropTarget.setTag(1,dropTarget.getText());
+                    //make it bold to highlight the fact that an item has been dropped
+                    dropTarget.setTypeface(Typeface.DEFAULT_BOLD);
+                    //if an item has already been dropped here, there will be a tag
+                    Object tag = dropTarget.getTag();
+                    //if there is already an item here, set it back visible in its original place
+                    if (tag != null) {
+                        //the tag is the view id already dropped here
+                        int existingID = (Integer) tag;
+                        //set the original view visible again
+                        findViewById(existingID).setVisibility(View.VISIBLE);
+                    }
+                    //set the tag in the target view being dropped on - to the ID of the view being dropped
+                    dropTarget.setTag(dropped.getId());
+                    //remove setOnDragListener by setting OnDragListener to null, so that no further drag & dropping on this TextView can be done
+                    dropTarget.setOnDragListener(null);
+                    dropTarget.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dropTarget.setText(dropTarget.getTag(1).toString());
+                            dropTarget.setOnDragListener(new ChoiceDragListener());
+                            dropped.setEnabled(true);
                         }
-                        //set the tag in the target view being dropped on - to the ID of the view being dropped
-                        dropTarget.setTag(dropped.getId());
-                        //remove setOnDragListener by setting OnDragListener to null, so that no further drag & dropping on this TextView can be done
-                        //dropTarget.setOnDragListener(null);
-                   // }
-                   // else
-                        //displays message if first character of dropTarget is not equal to first character of dropped
+                    });
+
+                    // }
+                    // else
+                    //displays message if first character of dropTarget is not equal to first character of dropped
                     //    Toast.makeText(Main2Activity.this, dropTarget.getText().toString() + "is not " + dropped.getText().toString(), Toast.LENGTH_LONG).show();
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
