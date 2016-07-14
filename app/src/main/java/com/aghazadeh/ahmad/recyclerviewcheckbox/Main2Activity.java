@@ -38,22 +38,23 @@ public class Main2Activity extends AppCompatActivity {
 
             for (String st : split) {
                 TextView textView = new TextView(this);
-                textView.setTextSize(21);
+                textView.setTextSize(50);
                 textView.setText(st);
                 lstView.add(textView);
 
                 if(matcher.find()){
                     String te=str.substring( matcher.start(),matcher.end());
                     String num[] = te.replace("#", "").split(":");
-                    String space = "";
+                    String space = "|";
                     for (int i = 0; i < Integer.parseInt(num[1]); i++) {
                         space += "_";
                     }
+                    space += "|";
                     TextView textView1 = new TextView(this);
                     textView1.setText(space);
-                    lstView.add(textView1);
+                    textView1.setTextSize(50);
                     textView1.setOnDragListener(new ChoiceDragListener());
-                    textView1.setTextSize(21);
+                    lstView.add(textView1);
 
                 }
             }
@@ -67,17 +68,22 @@ public class Main2Activity extends AppCompatActivity {
 
             choose.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             choose.setOrientation(LinearLayout.VERTICAL);
-            choose.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+
             TextView a = new TextView(this);
             a.setText("a");
+            a.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             a.setOnTouchListener(new ChoiceTouchListener());
-            a.setTextSize(21);
+            a.setTextSize(50);
+            a.setPadding(5,5,5,5);
+            a.setBackgroundColor(getResources().getColor(R.color.colorAccent));
 
             TextView apple = new TextView(this);
             apple.setText("apple");
             apple.setOnTouchListener(new ChoiceTouchListener());
-            apple.setTextSize(21);
-
+            apple.setTextSize(50);
+            apple.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            apple.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            apple.setPadding(5,5,5,5);
             choose.addView(a);
             choose.addView(apple);
 
@@ -139,12 +145,12 @@ public class Main2Activity extends AppCompatActivity {
                     //view being dragged and dropped
                     TextView dropped = (TextView) view;
                     //checking whether first character of dropTarget equals first character of dropped
-                    if(dropTarget.getText().toString().charAt(0) == dropped.getText().toString().charAt(0))
-                    {
+                    //if(dropTarget.getText().toString().charAt(0) == dropped.getText().toString().charAt(0))
+                    //{
                         //stop displaying the view where it was before it was dragged
                         view.setVisibility(View.INVISIBLE);
                         //update the text in the target view to reflect the data being dropped
-                        dropTarget.setText(dropTarget.getText().toString() + dropped.getText().toString());
+                        dropTarget.setText(dropped.getText().toString());
                         //make it bold to highlight the fact that an item has been dropped
                         dropTarget.setTypeface(Typeface.DEFAULT_BOLD);
                         //if an item has already been dropped here, there will be a tag
@@ -160,11 +166,11 @@ public class Main2Activity extends AppCompatActivity {
                         //set the tag in the target view being dropped on - to the ID of the view being dropped
                         dropTarget.setTag(dropped.getId());
                         //remove setOnDragListener by setting OnDragListener to null, so that no further drag & dropping on this TextView can be done
-                        dropTarget.setOnDragListener(null);
-                    }
-                    else
+                        //dropTarget.setOnDragListener(null);
+                   // }
+                   // else
                         //displays message if first character of dropTarget is not equal to first character of dropped
-                        Toast.makeText(Main2Activity.this, dropTarget.getText().toString() + "is not " + dropped.getText().toString(), Toast.LENGTH_LONG).show();
+                    //    Toast.makeText(Main2Activity.this, dropTarget.getText().toString() + "is not " + dropped.getText().toString(), Toast.LENGTH_LONG).show();
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     //no action necessary
@@ -175,4 +181,5 @@ public class Main2Activity extends AppCompatActivity {
             return true;
         }
     }
+
 }
