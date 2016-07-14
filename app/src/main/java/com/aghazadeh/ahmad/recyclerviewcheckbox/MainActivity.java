@@ -1,5 +1,6 @@
 package com.aghazadeh.ahmad.recyclerviewcheckbox;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startActivity(new Intent(MainActivity.this,Main2Activity.class));
         mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(mStaggeredLayoutManager);
@@ -49,6 +51,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 setTitle(str);
+            }
+        });
+
+        findViewById(R.id.btnAct2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this,Main2Activity.class));
             }
         });
 
